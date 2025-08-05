@@ -26,15 +26,13 @@ Visit the live application: [**Physics vs Data-Driven Analysis**](your-deployed-
 ```
 physics-vs-datadriven/
 ├── README.md
-├── requirements.txt
-├── physics_streamlit_app.py          # Main Streamlit application
+├── app.py          # Main Streamlit application
+├── anomaly_detection.py # Routine to detect anomalies
 ├── data/
 │   ├── enahnced_simulation_train_data.dat    # Training dataset (short distances)
 │   └── enahnced_simulation_test_data.dat     # Test dataset (worldwide)
 ├── screenshots/
-│   └── screenshot.png
-└── docs/
-    └── methodology.md
+    └── screenshot.png
 ```
 
 ## Installation & Setup

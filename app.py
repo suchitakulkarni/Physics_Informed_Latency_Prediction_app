@@ -67,8 +67,8 @@ TRUE_PHYSICS_SLOPE = 1000 / FIBER_SPEED * 1000  # ms/km = 0.005
 def load_and_validate_data():
     """Load and validate the simulation data with proper error handling"""
     try:
-        train_data = pd.read_csv('enahnced_simulation_train_data.dat')
-        test_data = pd.read_csv('enahnced_simulation_test_data.dat')
+        train_data = pd.read_csv('data/enahnced_simulation_train_data.dat')
+        test_data = pd.read_csv('data/enahnced_simulation_test_data.dat')
         
         # Validate required columns
         required_cols = ['geo_distance_km', 'measured_latency_ms', 'physics_latency_ms', 'is_anomaly']
