@@ -32,7 +32,8 @@ physics-vs-datadriven/
 │   ├── enahnced_simulation_train_data.dat    # Training dataset (short distances)
 │   └── enahnced_simulation_test_data.dat     # Test dataset (worldwide)
 ├── screenshots/
-    └── screenshot.png
+│    └── screenshot.png
+├── requirements.txt
 ```
 
 ## Installation & Setup
