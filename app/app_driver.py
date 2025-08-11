@@ -1,6 +1,5 @@
 import streamlit as st
-import uncertainty_demo
-import final_summary, basic_demo
+import uncertainty_demo, final_summary, basic_demo
 import pandas as pd
 from src.uncertainty_discovery import BlindUncertaintyEstimator, comprehensive_blind_analysis, \
     production_uncertainty_strategy
