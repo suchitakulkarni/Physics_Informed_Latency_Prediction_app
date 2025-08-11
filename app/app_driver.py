@@ -1,7 +1,7 @@
 import streamlit as st
 import uncertainty_demo, final_summary, basic_demo
 import pandas as pd
-from src.uncertainty_discovery import BlindUncertaintyEstimator, comprehensive_blind_analysis, \
+from uncertainty_discovery import BlindUncertaintyEstimator, comprehensive_blind_analysis, \
     production_uncertainty_strategy
 from src.anomaly_detection import evaluate_anomaly_detection, uncertainty_weighted_anomaly_detection
 from sklearn.linear_model import LinearRegression
@@ -9,33 +9,6 @@ from sklearn.metrics import precision_score, recall_score, f1_score, mean_square
 from sklearn.model_selection import train_test_split
 from sklearn.model_selection import cross_val_score, train_test_split
 from sklearn.metrics import mean_squared_error, r2_score
-
-
-
-# Physics constants
-FIBER_SPEED = 2e8  # speed of light in optical fiber (m/s)
-TRUE_PHYSICS_SLOPE = 1000 / FIBER_SPEED * 1000  # ms/km = 0.005
-
-#st.set_page_config(
-#    page_title="Uncertainty Discovery in Latency Prediction",
-#    layout="wide"
-#)
-
-# Custom CSS for better styling
-import streamlit as st
-import uncertainty_demo
-import final_summary, basic_demo
-import pandas as pd
-from src.uncertainty_discovery import BlindUncertaintyEstimator, comprehensive_blind_analysis, \
-    production_uncertainty_strategy
-from src.anomaly_detection import evaluate_anomaly_detection, uncertainty_weighted_anomaly_detection
-from sklearn.linear_model import LinearRegression
-from sklearn.metrics import precision_score, recall_score, f1_score, mean_squared_error
-from sklearn.model_selection import train_test_split
-from sklearn.model_selection import cross_val_score, train_test_split
-from sklearn.metrics import mean_squared_error, r2_score
-
-
 
 # Physics constants
 FIBER_SPEED = 2e8  # speed of light in optical fiber (m/s)
