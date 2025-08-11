@@ -3,7 +3,7 @@ import uncertainty_demo, final_summary, basic_demo
 import pandas as pd
 from uncertainty_discovery import BlindUncertaintyEstimator, comprehensive_blind_analysis, \
     production_uncertainty_strategy
-from src.anomaly_detection import evaluate_anomaly_detection, uncertainty_weighted_anomaly_detection
+from anomaly_detection import evaluate_anomaly_detection, uncertainty_weighted_anomaly_detection
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import precision_score, recall_score, f1_score, mean_squared_error
 from sklearn.model_selection import train_test_split
