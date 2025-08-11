@@ -1,215 +1,250 @@
-# Physics vs Data-Driven Network Latency Prediction
-
-**An interactive Streamlit application demonstrating why domain knowledge matters in machine learning**
+# Physics vs Data-Driven Uncertainty Comparison
 
 ## Overview
 
-This application demonstrates a critical machine learning concept: **how training data bias can lead data-driven models to learn incorrect baselines**, while physics-informed approaches remain robust. 
+This project demonstrates the superiority of physics-informed approaches over pure data-driven methods when dealing with distribution shifts and extrapolation scenarios. The simulation focuses on network latency prediction, comparing multiple uncertainty quantification techniques under challenging real-world conditions.
 
-Using network latency prediction as a case study, we show what happens when models trained on short-distance data must predict worldwide network latencies - a common real-world scenario in distributed systems.
+## Key Concepts
 
-![App Screenshot](screenshot.png)
+### The Extrapolation Challenge
 
-## Key Insights Demonstrated
+The core challenge addressed is **distribution shift**: training models on limited data (short distances < 2000km) and then evaluating performance on worldwide data (including intercontinental distances up to 20,000km). This represents a 5-10x extrapolation beyond the training range.
 
-- **Training Bias Problem**: Data-driven models learn wrong baselines from biased training data
-- **Physics Robustness**: Domain knowledge provides reliable foundations regardless of data bias  
-- **Distribution Shift**: How model performance degrades when deployment differs from training
-- **Interpretability**: Physics-based residuals have clear meaning vs. black-box predictions
+### Physics-Informed vs Data-Driven Approaches
 
-## Live Demo
-
-Visit the live application: [**Physics vs Data-Driven Analysis**](your-deployed-app-url)
-
-## Project Structure
-
-```
-physics-vs-datadriven/
-├── README.md
-├── app.py          # Main Streamlit application
-├── anomaly_detection.py # Routine to detect anomalies
-├── data/
-│   ├── enahnced_simulation_train_data.dat    # Training dataset (short distances)
-│   └── enahnced_simulation_test_data.dat     # Test dataset (worldwide)
-├── screenshots/
-│    └── screenshot.png
-├── requirements.txt
-```
-
-## Installation & Setup
-
-### Prerequisites
-- Python 3.8 or higher
-- pip package manager
-
-### Quick Start
-
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/yourusername/physics-vs-datadriven.git
-   cd physics-vs-datadriven
-   ```
-
-2. **Install dependencies**
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-3. **Ensure data files are in place**
-   - Place `enahnced_simulation_train_data.dat` in the project root
-   - Place `enahnced_simulation_test_data.dat` in the project root
-
-4. **Run the application**
-   ```bash
-   streamlit run physics_streamlit_app.py
-   ```
-
-5. **Open your browser** to `http://localhost:8501`
-
-### Docker Setup (Optional)
-
-```bash
-# Build the Docker image
-docker build -t physics-latency-app .
-
-# Run the container
-docker run -p 8501:8501 physics-latency-app
-```
-
-## Data Requirements
-
-The application expects two CSV files with the following columns:
-
-### Training Data (`enahnced_simulation_train_data.dat`)
-- `geo_distance_km`: Geographic distance in kilometers (< 2000km)
-- `measured_latency_ms`: Actual measured network latency
-- `physics_latency_ms`: Physics-based latency prediction
-- `is_anomaly`: Boolean indicating anomalous measurements
-
-### Test Data (`enahnced_simulation_test_data.dat`)
-- Same columns as training data
-- Covers full distance range (100km - 20,000km)
-
-## Using the Application
-
-### Main Features
-
-1. **Interactive Analysis Controls**
-   - Adjust anomaly detection threshold (1.0σ - 4.0σ)
-   - Toggle cross-validation results
-   - Show/hide detailed analysis
-
-2. **Comprehensive Visualizations**
-   - Data distribution comparison
-   - Model prediction comparison
-   - Error analysis by distance range
-   - Residuals analysis
-
-3. **Performance Metrics**
-   - Mean Squared Error (MSE)
-   - R² Score
-   - Cross-validation results
-   - Anomaly detection metrics (Precision, Recall, F1)
-
-### Key Sections
-
-- **Problem Statement**: Business context and challenge explanation
-- **Dataset Analysis**: Training vs test data comparison with insights
-- **Model Training**: Physics-informed vs data-driven approaches
-- **Bias Analysis**: Quantification of learning bias
-- **Visualization**: Interactive charts showing the full story
-- **Anomaly Detection**: Performance comparison for outlier detection
-- **Recommendations**: Actionable insights for production systems
+- **Physics-Informed**: Uses known physical constants (speed of light in optical fiber = 2×10^8 m/s) to constrain predictions
+- **Data-Driven**: Learns relationships purely from training data, susceptible to bias when training data is not representative
 
 ## Methodology
 
-### Physics-Informed Approach
-- Uses fundamental physics: `Latency = Distance × (1/Speed_of_Light_in_Fiber)`
-- Speed of light in optical fiber: 2×10⁸ m/s
-- True slope: 0.005 ms/km
-- No training required - pure domain knowledge
+### 1. Uncertainty Estimation Techniques
 
-### Data-Driven Approach
-- Linear regression trained on available data
-- 5-fold cross-validation
-- Train/validation split (80/20)
-- Learns slope and intercept from biased training data
+The code implements three primary uncertainty quantification methods:
 
-### Anomaly Detection
-- Residual-based approach using normalized residuals
-- Configurable threshold (default: 2.5σ)
-- Evaluation using precision, recall, and F1-score
+#### Physics-Informed Uncertainty
+```
+uncertainty = sqrt(noise^2 + physics_error^2 + model_uncertainty^2)
+```
+- **Noise Component**: Measurement noise estimation
+- **Physics Component**: Uncertainty in physical constants
+- **Model Component**: Structural model uncertainty
 
-## Business Applications
+#### Data-Driven Bootstrap Uncertainty
+```
+uncertainty = sqrt(base_variance + extrapolation_penalty + complexity_penalty)
+```
+- **Base Variance**: Bootstrap sampling variance
+- **Extrapolation Penalty**: Increases with distance from training data
+- **Complexity Penalty**: Model complexity adjustment
 
-This analysis is relevant for:
+#### Conformal Prediction
+```
+prediction_interval = [y_hat - q_alpha, y_hat + q_alpha]
+```
+Where q_alpha is the (1-alpha) quantile of calibration residuals.
 
-- **Content Delivery Networks (CDNs)**: Optimal traffic routing
-- **Cloud Computing**: Data center selection
-- **Online Gaming**: Multiplayer experience optimization  
-- **Financial Trading**: Execution delay minimization
-- **Video Streaming**: Quality adaptation
-- **IoT Networks**: Latency-sensitive applications
+### 2. Bias Analysis
 
-## Technical Highlights
+The simulation demonstrates systematic bias in data-driven approaches:
 
-### Machine Learning Concepts
-- Distribution shift and domain adaptation
-- Training bias and generalization
-- Cross-validation and model evaluation
-- Anomaly detection and outlier analysis
-- Physics-informed machine learning
-
-### Technologies Used
-- **Streamlit**: Interactive web application framework
-- **Plotly**: Interactive visualizations
-- **Scikit-learn**: Machine learning algorithms
-- **Pandas**: Data manipulation and analysis
-- **NumPy**: Numerical computing
-
-## Key Learnings
-
-1. **Domain Knowledge Matters**: Physics provides robust baselines
-2. **Data Bias is Dangerous**: Can lead to systematically wrong predictions
-3. **Distribution Shift is Real**: Training ≠ Deployment conditions
-4. **Hybrid Approaches Work**: Combine physics + data-driven corrections
-5. **Interpretability is Crucial**: Understand what your model learned
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request. For major changes, please open an issue first to discuss what you would like to change.
-
-### Development Setup
-```bash
-# Install development dependencies
-pip install -r requirements-dev.txt
-
-# Run tests
-python -m pytest tests/
-
-# Format code
-black physics_streamlit_app.py
-
-# Type checking
-mypy physics_streamlit_app.py
+```
+True Physics Slope: 0.005000 ms/km
+Learned Slope: biased_value ms/km
+Bias Error: |learned_slope - true_slope| / true_slope * 100%
 ```
 
-## Author
+### 3. Coverage Analysis
 
-**Your Name**
-- Portfolio: [https://suchitakulkarni.github.io/]
-- LinkedIn: [https://www.linkedin.com/in/suchitakulkarni/]
-- GitHub: [https://github.com/suchitakulkarni/DataScience]
-- Email: suchita.kulkarni<at>gmail.com
+Uncertainty quality is measured by **coverage**: the fraction of true values falling within predicted confidence intervals.
 
-## Acknowledgments
+```
+Coverage = P(y_true ∈ [CI_lower, CI_upper])
+Target = 95% for 95% confidence intervals
+```
 
-- Inspired by real-world challenges in network performance monitoring
-- Physics constants from telecommunications engineering literature
-- Streamlit community for excellent documentation and examples
+## Key Results
 
----
+### Training Bias Impact
 
-**If you find this project useful, please consider giving it a star!**
+When training data is geographically limited, data-driven models learn incorrect baseline relationships:
+- Physics slope (true): 5.000 × 10^-3 ms/km
+- Data-driven slope (biased): varies based on training distribution
+- Error propagates to uncertainty estimates
 
-*This project demonstrates advanced machine learning concepts through an accessible, interactive application. Perfect for data science portfolios, educational purposes, and understanding physics-informed ML approaches.*
+### Uncertainty Method Performance
+
+| Method | Coverage | Calibration | Robustness |
+|--------|----------|-------------|------------|
+| Physics-Informed | ~90-95% | High | Excellent under extrapolation |
+| Data-Driven | ~70-85% | Poor | Degrades with distance |
+| Conformal | ~85-92% | Good | Assumption violations under distribution shift |
+
+### Risk Assessment Framework
+
+The code implements a comprehensive risk assessment strategy:
+
+```
+Risk Score = f(extrapolation_factor, heteroscedasticity, non_linearity, outlier_rate)
+Strategy = {Conservative, Moderate, Aggressive} based on risk profile
+```
+
+## File Structure
+
+```
+├── main.py                           # Main analysis script
+├── data/
+│   ├── enhanced_simulation_train_data.dat  # simulated train data
+│   └── enhanced_simulation_test_data.dat   # simulated test data
+├── src/
+│   ├── anomaly_detection.py                # Routine for anomaly detection given threshold
+│   └── uncertainty_discovery.py            # Routine for computing uncertainties
+│   └── generate_data.py                    # Routine for generating new dataset
+├── app/
+│   ├── app_driver.py                       # Driver code for main streamlit demo
+│   ├── uncertainty_demo.py                 # Uncertainty demo used by app_driver
+│   ├── visualisation.py                    # Plotting scripts used by app_driver
+│   ├── final_summary.py                    # Main findings used by app_driver
+│   └── app.py                              # Small standalone app to demonstrate basic concepts
+├── notebooks/
+│   └── Linear_regression_vs_physics.ipynb  # Simplest notebook demo demonstrating how linear regression can be used for anomaly detection
+└── results/                                # directory for storing results and plots generated by code
+    ├── figure1_extrapolation_challenge.pdf
+    ├── figure2_uncertainty_comparison.pdf
+    └── figure3_practical_implications.pdf
+    └── uncertainty_comparison.png
+    └── heteroscedasticity_analysis.png
+    
+```
+
+## Dependencies
+
+```python
+numpy>=1.21.0
+pandas>=1.3.0
+matplotlib>=3.4.0
+scikit-learn>=1.0.0
+scipy>=1.7.0
+```
+
+## Usage
+
+There are several different ways to understand the code. 
+
+### Simplest demonstration 
+```bash
+jupyter notebook notebooks/Linear_regression_vs_physics.ipynb
+```
+This demonstrates the basic principle on the basis of which the project was developed. Contains no data analysis. 
+However it shows how one can tune anomaly detection threshold.
+
+### Streamlit app
+```bash
+streamlit run app/app_driver.py
+```
+Interactive app showing details of data analysis and visualisation along with details of statistical tests.
+```bash
+streamlit run app/app.py
+```
+Basic streamlit app to demonstrate the tests used and has ability to generate new data to create additional visualisations.
+
+### Basic Execution of command line interface
+```bash
+python main.py
+```
+
+### Expected Output
+The script generates:
+1. **Console Output**: Detailed analysis results and metrics
+2. **PDF Visualizations**: Three comprehensive figure sets
+3. **Performance Metrics**: Coverage, calibration, and bias analysis
+
+### Key Metrics Reported
+
+#### Uncertainty Quality Metrics
+- **Calibration**: Correlation between predicted uncertainty and actual error
+- **Sharpness**: Tightness of uncertainty bounds (lower is better for same coverage)
+- **Reliability**: Fraction of high-uncertainty predictions that are actually incorrect
+- **Coverage**: Percentage of true values within confidence intervals
+
+#### Anomaly Detection Performance
+- **Standard Detection**: Traditional residual-based anomaly detection
+- **Uncertainty-Weighted**: Residuals normalized by predicted uncertainty
+- **F1 Scores**: Harmonic mean of precision and recall
+
+## Theoretical Background
+
+### Why Physics-Informed Methods Excel
+
+1. **Constraint-Based Robustness**: Physical laws provide hard constraints that prevent unreasonable extrapolation
+2. **Interpretable Uncertainty**: Physics-based uncertainty components have clear physical meaning
+3. **Bias Resistance**: Physical constants are independent of training data distribution
+
+### Mathematical Foundation
+
+Network latency follows fundamental physics:
+```
+latency = distance / speed + processing_delays + noise
+```
+
+Where:
+- `distance`: Geographic distance between endpoints
+- `speed`: Speed of light in transmission medium (≈ 2×10^8 m/s in fiber)
+- `processing_delays`: Network equipment processing time
+- `noise`: Measurement and environmental noise
+
+### Distribution Shift Impact
+
+Under distribution shift, data-driven models suffer from:
+
+1. **Extrapolation Error**: Predictions become increasingly unreliable beyond training range
+2. **Bias Propagation**: Training bias affects both point predictions and uncertainty estimates
+3. **Assumption Violations**: Many uncertainty methods assume exchangeable data
+
+## Practical Applications
+
+### Network Performance Monitoring
+- **Latency Prediction**: Predict expected network latency for new routes
+- **Anomaly Detection**: Identify network performance anomalies with uncertainty weighting
+- **Capacity Planning**: Use uncertainty bounds for conservative resource allocation
+
+### Model Selection Guidance
+- **Low Extrapolation (<2x)**: Data-driven methods acceptable
+- **Medium Extrapolation (2-5x)**: Physics-informed preferred
+- **High Extrapolation (>5x)**: Physics-informed strongly recommended
+
+## Limitations and Future Work
+
+### Current Limitations
+1. **Simplified Physics Model**: Assumes constant speed of light, ignores routing complexity
+2. **Limited Noise Modeling**: Basic Gaussian noise assumptions
+3. **Geographic Constraints**: Focuses on distance-based latency only
+
+### Future Enhancements
+1. **Advanced Physics Models**: Include routing protocols, network topology
+2. **Hierarchical Uncertainty**: Multi-level uncertainty quantification
+3. **Online Learning**: Adaptive uncertainty in streaming scenarios
+
+## Interpretation Guide
+
+### Figure 1: Extrapolation Challenge
+- **Distribution Shift**: Training vs test data distributions
+- **Prediction Comparison**: Physics vs data-driven predictions with uncertainty
+- **Coverage Analysis**: How well uncertainty intervals capture true values
+
+### Figure 2: Uncertainty Method Comparison
+- **Coverage Performance**: Which methods achieve target coverage
+- **Distance-Dependent Uncertainty**: How uncertainty changes with extrapolation
+- **Risk Factor Analysis**: Why certain methods fail
+
+### Figure 3: Practical Implications
+- **Anomaly Detection**: Performance with and without uncertainty weighting
+- **Distance-Based Performance**: Error rates by distance range
+- **Recommendation Matrix**: Method selection guidance
+
+## Citation
+
+If using this code or methodology, please cite the underlying principles of physics-informed machine learning and uncertainty quantification in network performance analysis.
+
+## License
+
+This project is designed for research and educational purposes, demonstrating the importance of domain knowledge in machine learning under distribution shift scenarios.
